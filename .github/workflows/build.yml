@@ -23,9 +23,7 @@ jobs:
       - name: Compile Sketch with Max App Partition
         run: |
           arduino-cli compile \
-            --fqbn esp32:esp32:esp32 \
-            --build-property build.partitions=max_app_4MB \
-            --build-property board_build.flash_size=4MB \
+            --fqbn esp32:esp32:esp32:partition=max_app_4MB \
             --output-dir output esp32_4sw.ino
 
       - name: Upload a Build Artifact
@@ -34,8 +32,4 @@ jobs:
           name: firmware
           path: output/esp32_4sw.ino.bin
 
-      - name: Upload Partition Table
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: partition-table
-          path: max_app_4MB.csv.bin
+
