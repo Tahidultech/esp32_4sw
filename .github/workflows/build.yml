@@ -15,14 +15,16 @@ jobs:
       - name: Set up Arduino CLI
         uses: arduino/setup-arduino-cli@v1
 
-      - name: Install ESP32 Board
+      - name: Set up Arduino CLI and ESP32 core
         run: |
-          arduino-cli core update-index
-          arduino-cli core install esp32:esp32
+         curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/latest/install.sh | sh
+         arduino-cli core update-index
+         arduino-cli core install esp32:esp32
 
-      - name: Compile Sketch
-        run:  arduino-cli compile --fqbn esp32:esp32:esp32doit-devkit-v1 --board-options partition=min_spiffs --output-dir output esp32_4sw.ino
-        
+      - name: Compile (with partition)
+        run: |
+         arduino-cli compile --fqbn esp32:esp32:esp32doit-devkit-v1 --board-options partition=min_spiffs --output-dir output esp32_4sw.ino
+  
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
