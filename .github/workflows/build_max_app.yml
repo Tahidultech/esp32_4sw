@@ -21,21 +21,5 @@ jobs:
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
 
-      - name: Compile Sketch with Max App Partition
-        run: |
-          arduino-cli compile \
-            --fqbn esp32:esp32:esp32doit-devkit-v1 \
-            --build-property build.partitions=max_app \
-            --output-dir output esp32_4sw.ino
-
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: firmware
-          path: output/esp32_4sw.ino.bin
-
-      - name: Upload Partition Table
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: partition-table
-          path: partitions/max_app.csv
+      - name: Show ESP32 Board Details
+        run: arduino-cli board details esp32:esp32:esp32doit-devkit-v1
