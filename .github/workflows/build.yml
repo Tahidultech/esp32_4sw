@@ -1,4 +1,4 @@
-name: Build Firmware Max App
+name: Build Firmware Max App 4MB
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
         run: |
           arduino-cli compile \
             --fqbn esp32:esp32:esp32doit-devkit-v1 \
-            --build-property build.partitions=partitions/max_app \
+            --build-property build.partitions=partitions/max_app_4MB \
             --output-dir output esp32_4sw.ino
 
       - name: Upload a Build Artifact
@@ -37,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v4.6.2
         with:
           name: partition-table
-          path: partitions/max_app.csv
+          path: partitions/max_app_4MB.csv
