@@ -27,18 +27,20 @@ jobs:
           arduino-cli core update-index
           arduino-cli core install esp32:esp32@3.2.0
 
-      - name: List available boards (for debugging)
-        run: arduino-cli board listall
+      - name: List partitions (for debug)
+        run: |
+          ls ~/.arduino15/packages/esp32/hardware/esp32/3.2.0/tools/partitions
 
       - name: Compile Sketch with custom partition
         run: |
           arduino-cli compile \
             --fqbn esp32:esp32:esp32doit-devkit-v1 \
             --build-property build.partitions=max_app_4MB \
+            --output-dir ./build \
             esp32_4sw.ino
 
       - name: Upload Firmware Artifact
         uses: actions/upload-artifact@v4
         with:
           name: firmware
-          path: build/esp32.esp32.esp32doit-devkit-v1/esp32_4sw.ino.bin
+          path: build/*.bin
