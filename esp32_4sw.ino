@@ -1,29 +1,25 @@
 #include "RMaker.h"
 #include "WiFi.h"
 #include "WiFiProv.h"
-#include <Preferences.h>       // Use Preferences instead of EEPROM (NVS storage)
+#include <Preferences.h>
 #include <ezButton.h>
 
 //---------------------------------------------------
 const char* service_name = "Prov_Tahidul";
 const char* pop = "12345678";
 
-//---------------------------------------------------
 // Device Names
 const char* device_names[4] = {"Switch1", "Switch2", "Switch3", "Switch4"};
 
-//---------------------------------------------------
 // GPIO mapping
 static const uint8_t RELAY_PINS[4] = {5, 18, 19, 21};   // D23, D22, D21, D19
 static const uint8_t BUTTON_PINS[4] = {34, 35, 32, 33};
 static const uint8_t WIFI_LED = 2;   // D2
 static const uint8_t gpio_reset = 0;
 
-//---------------------------------------------------
 // Relay State
 bool relay_states[4] = {LOW, LOW, LOW, LOW};
 
-//---------------------------------------------------
 // RainMaker device objects
 static Switch* my_switches[4];
 
@@ -81,7 +77,7 @@ void setup(){
 
     preferences.begin("relays", false);
 
-    // Set the Relays GPIOs as output mode
+    // Set the Relays GPIOs as output mode and initialize relays/buttons
     for (int i = 0; i < 4; i++) {
         pinMode(RELAY_PINS[i], OUTPUT);
         buttons[i].setDebounceTime(100);
@@ -102,7 +98,7 @@ void setup(){
 
     // Initialize switch devices
     for (int i = 0; i < 4; i++) {
-        my_switches[i] = new Switch(device_names[i], &RELAY_PINS[i]);
+        my_switches[i] = new Switch(device_names[i], (void*)&RELAY_PINS[i]);
         my_switches[i]->addCb(write_callback);
         my_node.addDevice(*my_switches[i]);
     }
