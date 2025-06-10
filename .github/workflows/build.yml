@@ -23,6 +23,7 @@ jobs:
 
       - name: Compile (with partition)
         run: |
+         arduino-cli board details esp32:esp32:esp32doit-devkit-v1
          arduino-cli compile --fqbn esp32:esp32:esp32doit-devkit-v1 --board-options partition=min_spiffs --output-dir output esp32_4sw.ino
   
       - name: Upload a Build Artifact
