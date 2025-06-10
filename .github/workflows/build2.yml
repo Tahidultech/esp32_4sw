@@ -34,7 +34,7 @@ jobs:
         run: |
           arduino-cli compile \
             --fqbn esp32:esp32:esp32doit-devkit-v1 \
-            --build-property build.partitions=max_app_4MB.csv \
+            --build-property build.partitions=max_app_4MB \
             esp32_4sw.ino
 
       - name: Upload Firmware Artifact
