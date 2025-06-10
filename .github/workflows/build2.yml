@@ -1,0 +1,44 @@
+name: Build ESP32 Sketch
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+
+      - name: Install ESP32 Core 3.2.0
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32@3.2.0
+
+      - name: List available boards (for debugging)
+        run: arduino-cli board listall
+
+      - name: Compile Sketch with custom partition
+        run: |
+          arduino-cli compile \
+            --fqbn esp32:esp32:esp32doit-devkit-v1 \
+            --build-property build.partitions=max_app_4MB.csv \
+            esp32_4sw.ino
+
+      - name: Upload Firmware Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware
+          path: build/esp32.esp32.esp32doit-devkit-v1/esp32_4sw.ino.bin
