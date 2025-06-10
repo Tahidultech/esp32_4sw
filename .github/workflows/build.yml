@@ -1,1 +1,40 @@
+name: Build Firmware Max App
 
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+
+      - name: Install ESP32 core
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+
+      - name: Compile Sketch with Max App Partition
+        run: |
+          arduino-cli compile \
+            --fqbn esp32:esp32:esp32doit-devkit-v1 \
+            --build-property build.partitions=partitions/max_app \
+            --output-dir output esp32_4sw.ino
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: firmware
+          path: output/esp32_4sw.ino.bin
+
+      - name: Upload Partition Table
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: partition-table
+          path: partitions/max_app.csv
