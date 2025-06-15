@@ -21,7 +21,9 @@ jobs:
           arduino-cli core install esp32:esp32
 
       - name: Compile Sketch
-        run: arduino-cli compile --fqbn esp32:esp32:gen4-ESP32-S3R8n16 --output-dir output esp32_4sw.ino
+        run: arduino-cli compile \
+            --fqbn esp32:esp32 \
+            --output-dir output esp32_4sw.ino
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
